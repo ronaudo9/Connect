@@ -1,7 +1,7 @@
-const roter = require("express").Router();
+const router = require("express").Router();
 
-roter.get("/",(req,res) => {
+router.get("/",(req,res) => {
   res.send("posts router");
 });
 
-module.exports = roter;
+module.exports = router;
