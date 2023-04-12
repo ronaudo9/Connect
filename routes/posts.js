@@ -81,12 +81,25 @@ router.put("/:id/like", async (req, res) => {
   }
 });
 
-//タイムラインの投稿を取得
-
-//　"/:id"と差別化するために"/timeline/all"と記載
-router.get("/timeline/all", async (req, res) => {
+//プロフィール専用のタイムラインの取得
+router.get("/profile/:username", async (req, res) => {
   try {
-    const currentUser = await User.findById(req.body.userId);
+    //1人のユーザーの取得なのでfindOneを用いる。その際{username:}のようにプロパティの指定が必要。
+    const user = await User.findOne({username: req.params.username});
+    //currentUserのPostの情報をすべて取得している
+    const posts = await Post.find({ userId: user._id });
+    //concatは配列を組み合わせる関数
+    return res.status(200).json(posts);
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+});
+
+//タイムラインの投稿を取得
+//　"/:id"と差別化するために"/timeline/all"と記載
+router.get("/timeline/:userId", async (req, res) => {
+  try {
+    const currentUser = await User.findById(req.params.userId);
     //currentUserのPostの情報をすべて取得している
     const userPosts = await Post.find({ userId: currentUser._id });
     //自分がフォローしている友達の投稿内容をすべて取得する。
