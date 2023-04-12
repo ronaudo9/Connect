@@ -39,13 +39,30 @@ router.delete("/:id", async (req, res) => {
 });
 
 //ユーザー情報の取得
-router.get("/:id", async (req, res) => {
+// router.get("/:id", async (req, res) => {
+//   try {
+//     const user = await User.findById(req.params.id);
+//     //user._docはユーザーの中にあるすべての情報_docはMongoDBで配列を取り出す際に使用される
+//     //...otherは分割代入
+//     const { password, updatedAt, ...other } = user._doc;
+//     return res.status(200).json(other);
+//   } catch (err) {
+//     return res.status(500).json(err);
+//   }
+// });
+
+//クエリでユーザー情報の取得
+router.get("/", async (req, res) => {
+  const userId = req.query.userId;
+  const username = req.query.username;
   try {
-    const user = await User.findById(req.params.id);
+    const user = userId
+      ? await User.findById(userId)
+      : await User.findOne({ username: username });
     //user._docはユーザーの中にあるすべての情報_docはMongoDBで配列を取り出す際に使用される
     //...otherは分割代入
     const { password, updatedAt, ...other } = user._doc;
-    res.status(200).json(other);
+    return res.status(200).json(other);
   } catch (err) {
     return res.status(500).json(err);
   }
@@ -103,9 +120,7 @@ router.put("/:id/unfollow", async (req, res) => {
         });
         return res.status(200).json("フォロー解除しました！");
       } else {
-        return res
-          .status(403)
-          .json("このユーザーはフォロー解除できません。");
+        return res.status(403).json("このユーザーはフォロー解除できません。");
       }
     } catch (err) {
       return res.status(500).json(err);
