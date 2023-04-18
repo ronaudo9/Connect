@@ -1,7 +1,7 @@
-const router = require("./auth");
+// const router = require("./auth");
 const User = require("../models/User");
 
-const roter = require("express").Router();
+const router = require("express").Router();
 
 //CRDO
 //ユーザー情報の更新
