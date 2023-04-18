@@ -74,7 +74,8 @@ router.put("/:id/like", async (req, res) => {
           likes: req.body.userId,
         },
       });
-      return res.status(403).json("投稿にいいねを外しました");
+      //コンソールでエラーになるのでres.status()内の数字を403から200に変更
+      return res.status(200).json("投稿にいいねを外しました");
     }
   } catch (err) {
     return res.status(500).json(err);
