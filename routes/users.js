@@ -68,6 +68,19 @@ router.get("/", async (req, res) => {
   }
 });
 
+
+//リクエストのあったユーザーIDからフォローしているユーザーの情報を取得
+router.get("/:id/followings",async(req,res) => {
+  try{
+    const user = await User.findById(req.params.id);
+    const followingIds = user.followings;
+    //自分がフォローしている複数のユーザー情報を取得
+    const followings = await User.find({ _id: { $in: followingIds } });
+    return res.status(200).json(followings);
+  }catch(err){
+    return res.status(500).json(err);
+  }
+})
 //ユーザーのフォロー
 router.put("/:id/follow", async (req, res) => {
   if (req.body.userId !== req.params.id) {
