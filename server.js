@@ -27,12 +27,16 @@ app.use("/api/auth", authRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/upload", uploadRoute);
 
-app.get("/", (req, res) => {
-  res.send("hello express");
-});
+// app.get("/", (req, res) => {
+//   res.send("hello express");
+// });
 
 // app.get("/users",(req,res) => {
 //   res.send("users express");
 // });
+//エラー解消のため記載（リクエストされたリソースにAccess-Control-Allow-Originを追加）
+app.get('/', (req, res, next) => {
+  res.set({ 'Access-Control-Allow-Origin': 'http://localhost:3000' });
+});
 
 app.listen(PORT, () => console.log("サーバーが起動しました"));

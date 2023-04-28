@@ -68,7 +68,33 @@ router.get("/", async (req, res) => {
   }
 });
 
+//ユーザーの情報をすべて取得する
+router.get("/userAll", async (req, res) => {
+  try {
+    const users = await User.find({});
+    const userArray = users.map(user => {
+      const { password, updatedAt, ...other } = user._doc;
+      return other;
+    });
+    return res.status(200).json(userArray);
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+});
 
+//ログインしているユーザー以外のユーザー情報をすべて取得する
+router.get("/:id/userList", async (req, res) => {
+  try {
+    const users = await User.find({ _id: { $ne: req.params.id } });
+    const userArray = users.map(user => {
+      const { password, updatedAt, ...other } = user._doc;
+      return other;
+    });
+    return res.status(200).json(userArray);
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+});
 //リクエストのあったユーザーIDからフォローしているユーザーの情報を取得
 router.get("/:id/followings",async(req,res) => {
   try{
